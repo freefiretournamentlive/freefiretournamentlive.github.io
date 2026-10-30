@@ -37,7 +37,45 @@ function setAdmin(s){$('adminLogin').classList.toggle('hidden',s);$('adminDashbo
 async function loadRegs(){$('registrationList').innerHTML='<div class="empty">Loading registrations…</div>';let {data,error}=await db.from('registrations').select('id,team_name,captain_name,player_uid,phone,notes,payment_status,registration_status,created_at').order('created_at',{ascending:false});if(error){$('registrationList').innerHTML='<div class="empty bad">'+esc(error.message)+'</div>';return}if(!data?.length){$('registrationList').innerHTML='<div class="empty">No registrations yet.</div>';return}$('registrationList').innerHTML=data.map(r=>`<article class="admin-row"><b>${esc(r.team_name)}</b> <span class="pill">${esc(r.registration_status||'pending')}</span><div class="meta">Player: ${esc(r.captain_name)}<br>UID: ${esc(r.player_uid)}<br>WhatsApp: ${esc(r.phone)}<br>Notes: ${esc(r.notes||'—')}<br>Payment: ${esc(r.payment_status||'pending')}<br>Submitted: ${esc(dateText(r.created_at))}</div><div class="admin-actions"><button class="green" onclick="updateReg('${r.id}','approved')">Approve</button><button class="red" onclick="updateReg('${r.id}','rejected')">Reject</button><button class="gray" onclick="updatePay('${r.id}','paid')">Mark paid</button><button class="gray" onclick="updatePay('${r.id}','pending')">Payment pending</button></div></article>`).join('')}
 async function updateReg(id,status){let {error}=await db.from('registrations').update({registration_status:status}).eq('id',id);if(error){adminMsg(error.message,true);return}adminMsg('Registration marked '+status+'.');loadRegs()}
 async function updatePay(id,status){let {error}=await db.from('registrations').update({payment_status:status}).eq('id',id);if(error){adminMsg(error.message,true);return}adminMsg('Payment status updated to '+status+'.');loadRegs()}
-$('loginForm').addEventListener('submit',async e=>{e.preventDefault();$('loginBtn').disabled=true;let {data,error}=await db.auth.signInWithPassword({email:$('adminEmail').value.trim(),password:$('adminPassword').value});$('loginBtn').disabled=false;if(error){adminMsg('Login failed: '+error.message,true);return}setAdmin(true);adminMsg('Login successful.');loadRegs();$('adminPassword').value=''});
+async function loadRegs(){
+$('registrationList').innerHTML='<div class="empty">Loading registrations…</div>';
+let {data,error}=await db.from('registrations').select('id,team_name,captain_name,player_uid,phone,notes,payment_status,registration_status,created_at').order('created_at',{ascending:false});
+if(error){$('registrationList').innerHTML='<div class="empty bad">'+esc(error.message)+'</div>';return}
+if(!data?.length){$('registrationList').innerHTML='<div class="empty">No registrations yet.</div>';return}
+$('registrationList').innerHTML=data.map(r=>`<article class="admin-row"><b>${esc(r.team_name)}</b> <span class="pill">${esc(r.registration_status||'pending')}</span><div class="meta">Player: ${esc(r.captain_name)}<br>UID: ${esc(r.player_uid)}<br>WhatsApp: ${esc(r.phone)}<br>Notes: ${esc(r.notes||'—')}<br>Payment: ${esc(r.payment_status||'pending')}<br>Submitted: ${esc(dateText(r.created_at))}</div><div class="admin-actions"><button class="green" onclick="updateReg('${r.id}','approved')">Approve</button><button class="red" onclick="updateReg('${r.id}','rejected')">Reject</button><button class="gray" onclick="updatePay('${r.id}','paid')">Mark paid</button><button class="gray" onclick="updatePay('${r.id}','pending')">Payment pending</button><button class="gray" onclick="sendRoom('${r.id}')">Send room details</button></div></article>`).join('')
+}async function sendRoom(id){
+  let {data,error}=await db.from('registrations')
+    .select('team_name,captain_name,phone,registration_status')
+    .eq('id',id).single();
+
+  if(error || !data){
+    adminMsg('Could not find registration.',true);
+    return;
+  }
+
+  if(data.registration_status!=='approved'){
+    adminMsg('Approve this player first.',true);
+    return;
+  }
+
+  let roomId=prompt('Enter Room ID:');
+  if(!roomId || !roomId.trim()) return;
+
+  let roomPassword=prompt('Enter Room Password:');
+  if(!roomPassword || !roomPassword.trim()) return;
+
+  let phone=String(data.phone||'').replace(/\D/g,'');
+  if(phone.length===10) phone='91'+phone;
+
+  if(phone.length<10){
+    adminMsg('Invalid WhatsApp number.',true);
+    return;
+  }
+
+  let message=`Hello ${data.captain_name}, your Free Fire tournament room details:\nTeam: ${data.team_name}\nRoom ID: ${roomId}\nPassword: ${roomPassword}\nPlease join on time.`;
+
+  window.location.href='https://wa.me/'+phone+'?text='+encodeURIComponent(message);
+}
 $('logoutBtn').addEventListener('click',async()=>{await db.auth.signOut();setAdmin(false);adminMsg('Logged out.')});$('refreshRegs').addEventListener('click',loadRegs);
 db.auth.getSession().then(({data})=>{if(data.session){setAdmin(true);loadRegs()}});
 $('year').textContent=new Date().getFullYear();loadEvents();
