@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080b14">
+<title>FFIC ESPORTS | Battle Starts Here</title>
+<style>
+:root{--bg:#080b14;--panel:#111827;--panel2:#0d1321;--text:#f7f8fc;--muted:#a7b0c4;--red:#ff3b4e;--orange:#ff8a32;--line:#263047;--green:#46e0a1}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 80% 0%,#271326 0,transparent 32%),var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}a{color:inherit;text-decoration:none}.wrap{width:min(1120px,92%);margin:auto}
+header{position:sticky;top:0;z-index:10;background:#080b14eF;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}.nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:1px}.mark{width:42px;height:42px;display:grid;place-items:center;background:linear-gradient(135deg,var(--red),var(--orange));clip-path:polygon(20% 0,100% 0,80% 100%,0 100%);font-style:italic;font-size:18px}.brand span:last-child{display:block;color:var(--red)}nav{display:flex;gap:22px;align-items:center;font-size:14px;color:var(--muted)}nav a:hover{color:#fff}.btn{display:inline-flex;justify-content:center;align-items:center;border:0;border-radius:8px;padding:13px 18px;background:linear-gradient(100deg,var(--red),var(--orange));color:#fff;font-weight:900;letter-spacing:.5px;cursor:pointer;box-shadow:0 8px 28px #ff3b4e2b}.btn:hover{filter:brightness(1.08);transform:translateY(-1px)}.btn.secondary{background:transparent;border:1px solid #4a566d;box-shadow:none}.hero{padding:76px 0 56px;min-height:480px;display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}.eyebrow{color:var(--orange);font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase}.hero h1{font-size:clamp(42px,7vw,76px);line-height:.98;letter-spacing:-2px;margin:16px 0}.hero h1 em{font-style:normal;color:var(--red)}.hero p{max-width:560px;line-height:1.7;color:var(--muted)}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}.hero-art{min-height:300px;border:1px solid #4b2638;border-radius:18px;background:linear-gradient(145deg,#281522,#101729 55%,#171e31);position:relative;overflow:hidden;display:grid;place-items:center}.hero-art:before,.hero-art:after{content:"";position:absolute;width:260px;height:260px;border:2px solid #ff3b4e55;transform:rotate(35deg)}.hero-art:after{width:180px;height:180px;border-color:#ff8a3277}.crest{position:relative;z-index:1;text-align:center;font-weight:1000;font-style:italic;font-size:42px;line-height:.9;text-shadow:0 4px 20px #000}.crest small{display:block;font-size:13px;letter-spacing:5px;color:var(--orange);margin-top:14px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:8px auto 60px}.stat{padding:20px;border:1px solid var(--line);border-radius:12px;background:#0d1321}.stat strong{font-size:26px;display:block}.stat span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}.section{padding:30px 0 60px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:22px}.section h2{font-size:clamp(27px,4vw,38px);margin:8px 0}.section-head p{color:var(--muted);margin:0}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:linear-gradient(160deg,#131b2c,#0d1321);border:1px solid var(--line);border-radius:14px;overflow:hidden}.card-top{height:100px;padding:18px;background:linear-gradient(120deg,#4a1529,#1b2036);display:flex;align-items:end;justify-content:space-between}.badge{font-size:11px;padding:7px 9px;border-radius:5px;background:#ff3b4e;color:white;font-weight:900;letter-spacing:.7px}.badge.green{background:#153e34;color:var(--green)}.card-body{padding:20px}.card h3{margin:0 0 10px;font-size:20px}.card p{color:var(--muted);font-size:14px;line-height:1.6}.meta{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:14px;margin-top:16px;font-size:13px;color:var(--muted)}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}.box{padding:24px;border:1px solid var(--line);border-radius:14px;background:var(--panel2)}.box h3{margin-top:0}.rules{padding-left:20px;color:var(--muted);line-height:1.9}.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}.table{width:100%;border-collapse:collapse;min-width:500px}.table th,.table td{text-align:left;padding:15px;border-bottom:1px solid var(--line);font-size:14px}.table th{color:var(--muted);text-transform:uppercase;font-size:11px;letter-spacing:1px;background:#111827}.table tr:last-child td{border-bottom:0}.register{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;padding:32px;border:1px solid #4b2638;border-radius:18px;background:linear-gradient(120deg,#251320,#111827)}.register p{color:var(--muted);line-height:1.7}.notice{font-size:12px;color:var(--muted);line-height:1.6;margin-top:12px}footer{border-top:1px solid var(--line);padding:26px 0;color:var(--muted);font-size:13px}.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media(max-width:760px){nav{gap:12px}nav a:not(.btn){display:none}.hero{grid-template-columns:1fr;padding-top:48px}.hero-art{min-height:220px}.stats{grid-template-columns:repeat(2,1fr)}.cards{grid-template-columns:1fr}.two-col,.register{grid-template-columns:1fr}.section-head{align-items:start;flex-direction:column}.register{padding:22px}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav">
+<a class="brand" href="#home"><span class="mark">FF</span><span>FFIC <span>ESPORTS</span></span></a>
+<nav><a href="#tournaments">Tournaments</a><a href="#leaderboard">Leaderboard</a><a href="#rules">Rules</a><a class="btn" href="#register">REGISTER</a></nav>
+</div></header>
+<main id="home" class="wrap">
+<section class="hero">
+<div><div class="eyebrow">Community • Competition • Glory</div><h1>YOUR SQUAD.<br><em>YOUR LEGACY.</em></h1><p>Enter the arena with FFIC ESPORTS. Find tournaments, register your squad, compete fairly, and climb the leaderboard.</p><div class="actions"><a class="btn" href="#register">REGISTER YOUR SQUAD ↗</a><a class="btn secondary" href="#tournaments">Explore tournaments</a></div></div>
+<div class="hero-art"><div class="crest">FFIC<br><span style="color:var(--red)">ESPORTS</span><small>BATTLE STARTS HERE</small></div></div>
+</section>
+<section class="stats" aria-label="Tournament statistics">
+<div class="stat"><strong>12</strong><span>Squad slots</span></div><div class="stat"><strong>₹1,000</strong><span>Prize pool*</span></div><div class="stat"><strong>FREE</strong><span>Entry fee</span></div><div class="stat"><strong>4</strong><span>Players per squad</span></div>
+</section>
+<section id="tournaments" class="section">
+<div class="section-head"><div><div class="eyebrow">Choose your battlefield</div><h2>Featured Tournament</h2><p>Check the details before registering.</p></div><span class="badge green">REGISTRATION OPEN*</span></div>
+<div class="cards">
+<article class="card"><div class="card-top"><span class="badge">SQUAD BATTLE</span><span>🔥</span></div><div class="card-body"><h3>FFIC Community Cup</h3><p>Bring your four-player squad and compete for the top spot. Teams are confirmed after admin review.</p><div class="meta"><span>Entry: Free</span><strong>Prize: ₹1,000*</strong></div></div></article>
+<article class="card"><div class="card-top"><span class="badge">12 SQUADS</span><span>⚔️</span></div><div class="card-body"><h3>Format & Slots</h3><p>Maximum 12 squads. Submit accurate player names and UIDs. Duplicate or incomplete entries may be rejected.</p><div class="meta"><span>48 players max</span><strong>Squad mode</strong></div></div></article>
+<article class="card"><div class="card-top"><span class="badge">UPDATES</span><span>📣</span></div><div class="card-body"><h3>Match Announcements</h3><p>Match timings, room details, and confirmed team lists should be shared by the tournament admin.</p><div class="meta"><span>Follow updates</span><strong>Stay ready</strong></div></div></article>
+</div><p class="notice">*Confirm prize details, tournament date, registration status, and all rules with the organizer before publishing this page publicly.</p>
+</section>
+<section id="leaderboard" class="section">
+<div class="section-head"><div><div class="eyebrow">The road to the top</div><h2>Leaderboard</h2><p>Replace sample rows with verified match results.</p></div></div>
+<div class="table-wrap"><table class="table"><thead><tr><th>Rank</th><th>Team</th><th>Placement points</th><th>Kills</th><th>Total</th></tr></thead><tbody><tr><td>—</td><td>Results pending</td><td>—</td><td>—</td><td>—</td></tr><tr><td>—</td><td>Results pending</td><td>—</td><td>—</td><td>—</td></tr><tr><td>—</td><td>Results pending</td><td>—</td><td>—</td><td>—</td></tr></tbody></table></div>
+</section>
+<section id="rules" class="section">
+<div class="section-head"><div><div class="eyebrow">Play fair</div><h2>Tournament basics</h2></div></div>
+<div class="two-col"><div class="box"><h3>📋 Before you play</h3><ul class="rules"><li>Register one squad with four players.</li><li>Enter each player's correct in-game name and UID.</li><li>Wait for confirmation from the organizer.</li><li>Join the lobby at the announced time.</li></ul></div><div class="box"><h3>🛡️ Fair-play policy</h3><ul class="rules"><li>No cheats, hacks, or unfair third-party tools.</li><li>Do not impersonate another player or team.</li><li>Follow organizer instructions and match rules.</li><li>Admin decisions and scoring evidence should be recorded clearly.</li></ul></div></div>
+</section>
+<section id="register" class="section">
+<div class="register"><div><div class="eyebrow">Slots are limited</div><h2>Ready to drop in?</h2><p>Register your squad through the official form. Your details should only be visible to the tournament organizer and authorized admins.</p><a id="registerBtn" class="btn" href="#register" target="_blank" rel="noopener">REGISTER YOUR TEAM ↗</a><div class="notice">Admin setup required: connect this button to your Google Form registration link before sharing the website.</div></div><div class="box"><h3>Registration checklist</h3><ul class="rules"><li>Team name and captain contact</li><li>Four player names and UIDs</li><li>Captain confirms the team details</li><li>Wait for approval and match instructions</li></ul></div></div>
+</section>
+</main>
+<footer><div class="wrap foot"><span><strong>FFIC ESPORTS</strong> — Community tournament hub</span><span>Independent community project. Not an official Garena website.</span></div></footer>
+<script>
+// Replace the placeholder below with your published Google Form URL.
+// Example: const REGISTRATION_FORM_URL = "https://forms.gle/your-form-id";
+const REGISTRATION_FORM_URL = "";
+const registerBtn = document.getElementById("registerBtn");
+if (REGISTRATION_FORM_URL.trim()) {
+  registerBtn.href = REGISTRATION_FORM_URL.trim();
+} else {
+  registerBtn.addEventListener("click", function(e) {
+    e.preventDefault();
+    alert("Organizer setup needed: add your published Google Form URL in this website's HTML file first.");
+  });
+}
+</script>
+</body>
+</html>
