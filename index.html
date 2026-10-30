@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101014"><title>FREE FIRE ESPORTS</title>
+<style>
+:root{--bg:#101014;--panel:#1a1b22;--muted:#a9aab4;--red:#ff453a;--gold:#ffc857;--line:#30313b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font:15px/1.5 system-ui,Arial,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:12px 16px;font-weight:800;background:var(--red);color:white}.wrap{max-width:1080px;margin:auto;padding:0 16px}.hero{background:linear-gradient(120deg,#341316,#171820 65%);padding:30px 0 34px;border-bottom:1px solid var(--line)}.nav{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 0}.brand{font-weight:1000;letter-spacing:1px}.brand span{color:var(--red)}.tag{color:var(--gold);font-size:12px;font-weight:900;letter-spacing:2px}.hero h1{font-size:clamp(34px,8vw,58px);line-height:1.02;margin:12px 0}.hero p,.muted{color:var(--muted)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.secondary{background:#30313b}.section{padding:26px 0}.section h2{margin:0 0 14px;font-size:24px}.stats,.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:13px}.stat,.card,.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:16px}.stat strong{display:block;font-size:24px;color:var(--gold)}.card h3{margin:8px 0 5px}.pill{display:inline-block;padding:4px 9px;border-radius:30px;background:#382326;color:#ffaaa5;font-size:11px;font-weight:900}.pill.free{background:#18352b;color:#8de0b5}.meta{color:var(--muted);font-size:13px;margin:10px 0}.card button{width:100%;margin-top:8px}.empty{border:1px dashed #50515c;border-radius:12px;padding:22px;text-align:center;color:var(--muted)}label{display:block;font-size:13px;color:#d5d5dc;margin:10px 0 5px}input,select,textarea{width:100%;padding:12px;border-radius:9px;border:1px solid #41424c;background:#111218;color:white}form .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.notice{font-size:12px;color:var(--muted);margin-top:10px}.hidden{display:none!important}.row{display:flex;justify-content:space-between;gap:12px;align-items:center}.small{font-size:12px;color:var(--muted)}footer{border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font-size:12px}.link{color:#ffc857;text-decoration:underline;cursor:pointer}.status{margin-top:12px;padding:10px;border-radius:9px;background:#20212a;color:#ddd}.good{color:#8de0b5}.bad{color:#ffaaa5}
+@media(max-width:560px){form .grid{grid-template-columns:1fr}.nav{align-items:flex-start}.hero{padding-top:8px}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+ <div class="nav"><div class="brand">🔥 FREE FIRE <span>ESPORTS</span></div><button class="secondary" onclick="document.getElementById('tournaments').scrollIntoView({behavior:'smooth'})">Tournaments</button></div>
+ <div class="tag">COMPETE • CLIMB • WIN</div><h1>YOUR NEXT<br><span style="color:var(--red)">BOOYAH</span> STARTS HERE.</h1>
+ <p>Join community Free Fire tournaments. Find your squad, register and compete for prizes.</p>
+ <div class="actions"><button onclick="document.getElementById('tournaments').scrollIntoView({behavior:'smooth'})">Explore tournaments</button></div>
+</div></header>
+<main class="wrap">
+<section class="section"><div class="stats">
+ <div class="stat"><strong id="statEvents">—</strong><span class="muted">Upcoming tournaments</span></div>
+ <div class="stat"><strong>ONLINE</strong><span class="muted">Registration database connected</span></div>
+ <div class="stat"><strong>SOLO • DUO • SQUAD</strong><span class="muted">Game formats</span></div>
+</div><div id="connectionStatus" class="status">Connecting to tournament server…</div></section>
+<section id="tournaments" class="section"><div class="row"><h2>🔥 Upcoming tournaments</h2><span class="small">Choose a match</span></div><div id="tournamentList" class="cards"><div class="empty">Loading tournaments…</div></div></section>
+<section id="register" class="section hidden"><h2>📝 Tournament registration</h2><div class="panel"><p class="muted">Enter your details carefully. Your registration will be sent to the online database.</p>
+<form id="regForm"><label>Tournament</label><select id="regTournament" required></select>
+<div class="grid"><div><label>Team / Player name</label><input id="team" required maxlength="40" placeholder="Your team name"></div><div><label>Captain name</label><input id="captain" required maxlength="40" placeholder="Your name"></div>
+<div><label>Free Fire UID</label><input id="uid" required inputmode="numeric" maxlength="20" placeholder="Player UID"></div><div><label>WhatsApp number</label><input id="phone" required inputmode="tel" maxlength="15" placeholder="Contact number"></div></div>
+<label>Mode</label><select id="mode"><option>Squad</option><option>Duo</option><option>Solo</option></select>
+<label>Teammate names / notes (optional)</label><textarea id="notes" rows="2" maxlength="250" placeholder="List teammate names or other details"></textarea>
+<button id="submitBtn" type="submit" style="width:100%;margin-top:14px">Submit registration</button>
+<p class="notice">Do not send money yet. Payment and slot confirmation are handled separately by the organizer. Never share your UPI PIN or OTP.</p></form><div id="regMessage" role="status"></div></div></section>
+</main>
+<footer><div class="wrap row"><span>© <span id="year"></span> FREE FIRE ESPORTS</span><span>Community tournament site</span></div><div class="wrap notice">Independent community tournament project; not affiliated with or endorsed by Garena. Follow local laws and game tournament rules.</div></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://ggghzgafpueqgduoxgne.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_kfduK3vAdz4dhDTsRGkOUw_reDfXV77';
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+let events = [];
+const $ = id => document.getElementById(id);
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function dateText(v){if(!v)return 'Date to be announced';let d=new Date(v);return isNaN(d)?v:d.toLocaleString()}
+function fillSelect(){const old=$('regTournament').value;$('regTournament').innerHTML=events.map(e=>`<option value="${esc(e.id)}">${esc(e.title)} — ${Number(e.entry_fee)===0?'Free':'₹'+e.entry_fee}</option>`).join('');if(events.some(e=>e.id===old))$('regTournament').value=old}
+function render(){
+ $('statEvents').textContent=events.length;
+ $('tournamentList').innerHTML=events.length?events.map(e=>`<article class="card"><span class="pill ${Number(e.entry_fee)===0?'free':''}">${Number(e.entry_fee)===0?'FREE':'PAID ENTRY'}</span><h3>${esc(e.title)}</h3><div class="meta">📅 ${esc(dateText(e.start_time))}<br>🎮 ${esc(e.game_mode)}<br>🏆 Prize pool: ₹${Number(e.prize_pool)||0}<br>🎟 Entry: ${Number(e.entry_fee)===0?'Free':'₹'+Number(e.entry_fee)}</div><button onclick="startReg('${e.id}')">Register now</button></article>`).join(''):'<div class="empty">No tournaments published yet. Please check back soon.</div>';
+ fillSelect();
+}
+function startReg(id){$('register').classList.remove('hidden');$('regTournament').value=id;$('register').scrollIntoView({behavior:'smooth'});}
+async function loadEvents(){
+ const {data,error}=await db.from('tournaments').select('id,title,game_mode,entry_fee,prize_pool,start_time,status').eq('status','upcoming').order('start_time',{ascending:true});
+ if(error){$('connectionStatus').innerHTML='<span class="bad">Could not load tournaments: '+esc(error.message)+'. Please refresh later.</span>';return}
+ events=data||[];$('connectionStatus').innerHTML='<span class="good">Connected successfully. Tournament list is live.</span>';render();
+}
+$('regForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ const event=events.find(x=>x.id===$('regTournament').value);
+ if(!event){$('regMessage').innerHTML='<p class="bad">Please select an available tournament.</p>';return}
+ $('submitBtn').disabled=true;$('submitBtn').textContent='Submitting…';
+ const notes='Mode: '+$('mode').value+( $('notes').value.trim() ? ' | '+$('notes').value.trim() : '');
+ const payload={tournament_id:event.id,team_name:$('team').value.trim(),captain_name:$('captain').value.trim(),player_uid:$('uid').value.trim(),phone:$('phone').value.trim(),notes,payment_reference:null};
+ const {error}=await db.from('registrations').insert(payload);
+ $('submitBtn').disabled=false;$('submitBtn').textContent='Submit registration';
+ if(error){$('regMessage').innerHTML='<p class="bad">Registration failed: '+esc(error.message)+'. Please try again or contact the organizer.</p>';return}
+ $('regMessage').innerHTML='<div class="status"><b class="good">Registration submitted successfully!</b><br>Your details have been sent to the tournament database. The organizer must confirm your slot. Do not pay until you receive official payment instructions.</div>';
+ e.target.reset();
+});
+$('year').textContent=new Date().getFullYear();
+loadEvents();
+</script></body></html>
