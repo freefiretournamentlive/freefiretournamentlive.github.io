@@ -29,4 +29,8 @@ async function updateReg(id,status){let {error}=await db.from('registrations').u
 $('loginForm').addEventListener('submit',async e=>{e.preventDefault();$('loginBtn').disabled=true;let {error}=await db.auth.signInWithPassword({email:$('adminEmail').value.trim(),password:$('adminPassword').value});$('loginBtn').disabled=false;if(error){adminMsg(error.message,true);return}setAdmin(true);loadRegs()});$('logoutBtn').addEventListener('click',async()=>{await db.auth.signOut();setAdmin(false);adminMsg('Logged out.')});$('refreshRegs').addEventListener('click',loadRegs);db.auth.getSession().then(({data})=>{if(data.session){setAdmin(true);loadRegs()}});$('year').textContent=new Date().getFullYear();loadEvents();
 </script>
 <a href="https://wa.me/919957267942?text=Hello%2C%20I%20want%20tournament%20details" style="position:static;display:inline-block;margin:15px 16px;font-size:14px;background:#25D366;color:white;padding:14px 20px;border-radius:30px;text-decoration:none;font-weight:bold;z-index:9999;">WhatsApp Us</a>
-</body></html>
+<p style="text-align:center;padding:15px">
+<a href="terms.html" style="color:#ffb400;font-weight:bold">
+Terms & Conditions
+</a>
+</p></body></html>
