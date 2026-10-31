@@ -46,7 +46,41 @@ document.getElementById('googleLogin').addEventListener('click', async () => {
     }
   });
   if (error) alert(error.message);
-});</script>
+});async function updatePlayerProfile() {
+  const { data } = await db.auth.getSession();
+  const user = data.session?.user;
+
+  const profile = document.getElementById('playerProfile');
+  const name = document.getElementById('playerName');
+  const google = document.getElementById('googleLogin');
+  const logout = document.getElementById('logoutBtn');
+
+  if (user) {
+    name.textContent =
+      user.user_metadata.full_name ||
+      user.user_metadata.name ||
+      user.email ||
+      'Player';
+
+    google.style.display = 'none';
+    logout.style.display = 'inline-block';
+  } else {
+    name.textContent = 'Guest';
+    google.style.display = 'inline-block';
+    logout.style.display = 'none';
+  }
+}
+
+db.auth.onAuthStateChange(() => {
+  updatePlayerProfile();
+});
+
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  await db.auth.signOut();
+  updatePlayerProfile();
+});
+
+updatePlayerProfile();</script>
 <a href="https://wa.me/919957267942?text=Hello%2C%20I%20want%20tournament%20details" style="position:static;display:inline-block;margin:15px 16px;font-size:14px;background:#25D366;color:white;padding:14px 20px;border-radius:30px;text-decoration:none;font-weight:bold;z-index:9999;">WhatsApp Us</a>
 <p style="text-align:center;padding:15px">
 <a href="terms.html" style="color:#ffb400;font-weight:bold">
