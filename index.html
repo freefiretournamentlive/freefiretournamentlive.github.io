@@ -67,6 +67,17 @@ document.getElementById('googleLogin').addEventListener('click', async () => {
   const logout = document.getElementById('logoutBtn');
 
   if (user) {
+    const { data: savedProfile } = await db
+  .from('player_profiles')
+  .select('game_name, game_uid, whatsapp')
+  .eq('id', user.id)
+  .maybeSingle();
+
+if (savedProfile) {
+  document.getElementById('gameName').value = savedProfile.game_name || '';
+  document.getElementById('gameUid').value = savedProfile.game_uid || '';
+  document.getElementById('whatsapp').value = savedProfile.whatsapp || '';
+}
     name.textContent =
       user.user_metadata.full_name ||
       user.user_metadata.name ||
