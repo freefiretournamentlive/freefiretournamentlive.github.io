@@ -43,7 +43,16 @@
 I agree to the
 <a href="terms.html" target="_blank" style="color:#ffb400">Terms & Conditions</a>
 </label></form><div id="regMessage"></div></div></section>
-<section id="admin" class="section"><div class="row"><h2>🔐 Admin dashboard</h2><button class="secondary" onclick="document.getElementById('adminPanel').classList.toggle('hidden')">Open</button></div><div id="adminPanel" class="panel hidden"><div id="adminLogin"><p class="muted">Sign in with the admin account created in Supabase. Only the authorized account can read registrations.</p><form id="loginForm"><label>Admin email</label><input id="adminEmail" type="email" autocomplete="username" required><label>Password</label><input id="adminPassword" type="password" autocomplete="current-password" required><button id="loginBtn" style="width:100%;margin-top:14px">Admin login</button></form></div><div id="adminDashboard" class="hidden"><div class="row"><span class="good">Signed in as admin</span><button class="secondary" id="logoutBtn">Log out</button></div><div class="row"><h3>Player registrations</h3><button class="secondary" id="refreshRegs">Refresh</button></div><div id="registrationList"></div></div><div id="adminMessage" class="status hidden"></div></div></section>
+<section id="admin" class="section"><div class="row"><h2>🔐 Admin dashboard</h2><button class="secondary" onclick="document.getElementById('adminPanel').classList.toggle('hidden')">Open</button></div><div id="adminPanel" class="panel hidden"><div id="adminLogin"><p class="muted">Sign in with the admin account created in Supabase. Only the authorized account can read registrations.</p><form id="loginForm"><label>Admin email</label><input id="adminEmail" type="email" autocomplete="username" required><label>Password</label><input id="adminPassword" type="password" autocomplete="current-password" required><button id="loginBtn" style="width:100%;margin-top:14px">Admin login</button></form></div><div id="adminDashboard" class="hidden"><div class="row"><span class="good">Signed in as admin</span><button class="secondary" id="logoutBtn">Log out</button></div><div class="row"><h3>Player registrations</h3><button class="secondary" id="refreshRegs">Refresh</button></div><div class="panel" id="matchGenerator">
+  <h3>⚔️ Clash Squad Match Generator</h3>
+  <select id="matchTournament">
+    <option value="">Select Clash Squad tournament</option>
+  </select>
+  <button class="secondary" id="generateMatchesBtn">
+    Generate Matches
+  </button>
+  <p id="matchGeneratorMessage"></p>
+</div><div id="registrationList"></div></div><div id="adminMessage" class="status hidden"></div></div></section>
 <section style="background:#1a1b22;padding:25px;margin:20px 0;border-radius:18px;text-align:center;color:white"><h2>💳 UPI Payment</h2><p>Only pay for paid tournaments. Sunday Battle is FREE.</p><img src="upi-qr.png" alt="UPI QR Code" style="width:100%;max-width:300px;border-radius:12px"><h3>UPI ID</h3><p>s3541410320@slc</p><p>Verify the amount and recipient before paying.</p><p>Enter your UTR during registration. The organizer will verify payment manually.</p></section></main>
 <footer><div class="wrap row"><span>© <span id="year"></span> FREE FIRE ESPORTS</span><span>Community tournament site</span></div><div class="wrap notice">Independent community tournament project; not affiliated with or endorsed by Garena. Follow local laws and game tournament rules.</div></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
@@ -65,7 +74,53 @@ $('regTournament').addEventListener('change',syncMode);$('tournamentSearch').add
 $('gameFilter').addEventListener('change',render);
 $('regForm').addEventListener('submit',async e=>{e.preventDefault();let event=selectedEvent();if(!event)return;let paid=Number(event.entry_fee)>0,utr=$('utr').value.trim();if(paid&&!utr){$('regMessage').innerHTML='<p class="bad">Enter your UTR / transaction reference to continue.</p>';return}$('submitBtn').disabled=true;let payload={tournament_id:event.id,team_name:$('team').value.trim(),captain_name:$('captain').value.trim(),player_uid:$('uid').value.trim(),phone:$('phone').value.trim(),notes:'Mode: '+event.game_mode+($('notes').value.trim()?' | '+$('notes').value.trim():''),payment_reference:paid?utr:null,payment_status:paid?'pending':'not_required',registration_status:'pending'};let {error}=await db.from('registrations').insert(payload);$('submitBtn').disabled=false;if(error){$('regMessage').innerHTML='<p class="bad">Registration failed: '+esc(error.message)+'</p>';return}$('regMessage').innerHTML='<div class="status"><b class="good">Registration submitted successfully!</b><br>'+(paid?'Your UTR has been submitted. The organizer must verify payment before approving your slot.':'Your free tournament registration is pending organizer approval.')+'<br>Room details will be sent after approval. Do not share your UPI PIN or OTP.</div>';e.target.reset();syncMode()});
 function adminMsg(t,bad=false){$('adminMessage').textContent=t;$('adminMessage').classList.remove('hidden');$('adminMessage').classList.toggle('bad',bad);$('adminMessage').classList.toggle('good',!bad)}function setAdmin(s){$('adminLogin').classList.toggle('hidden',s);$('adminDashboard').classList.toggle('hidden',!s);}
-async function loadRegs(){$('registrationList').innerHTML='<div class="empty">Loading registrations…</div>';let {data,error}=await db.from('registrations').select('id,tournament_id,team_name,captain_name,player_uid,phone,notes,payment_reference,payment_status,registration_status,created_at').order('created_at',{ascending:false});if(error){$('registrationList').innerHTML='<div class="empty bad">'+esc(error.message)+'</div>';return}if(!data?.length){$('registrationList').innerHTML='<div class="empty">No registrations yet.</div>';return}let ids=[...new Set(data.map(r=>r.tournament_id).filter(Boolean))],feeMap={};if(ids.length){let {data:ts}=await db.from('tournaments').select('id,title,entry_fee').in('id',ids);(ts||[]).forEach(t=>feeMap[t.id]=t)}$('registrationList').innerHTML=data.map(r=>{let t=feeMap[r.tournament_id],fee=t?Number(t.entry_fee):null;return `<article class="admin-row"><b>${esc(r.team_name)}</b> <span class="pill">${esc(r.registration_status||'pending')}</span><div class="meta">Tournament: ${esc(t?.title||'Unknown')}<br>Entry fee: ${fee===null?'Unknown':fee===0?'Free':'₹'+fee}<br>Player: ${esc(r.captain_name)}<br>UID: ${esc(r.player_uid)}<br>WhatsApp: ${esc(r.phone)}<br>Notes: ${esc(r.notes||'—')}<br>UTR / reference: ${esc(r.payment_reference||'Not provided')}<br>Payment: ${esc(r.payment_status||'pending')}<br>Submitted: ${esc(dateText(r.created_at))}</div><div class="admin-actions"><button class="green" onclick="updateReg('${r.id}','approved')">Approve</button><button class="red" onclick="updateReg('${r.id}','rejected')">Reject</button><button class="gray" onclick="updatePay('${r.id}','paid')">Mark paid</button><button class="gray" onclick="updatePay('${r.id}','pending')">Payment pending</button></div></article>`}).join('')}
+async function loadClashTournaments() {
+  const select = document.getElementById('matchTournament');
+  const message = document.getElementById('matchGeneratorMessage');
+
+  const { data, error } = await db
+    .from('tournaments')
+    .select('id,title')
+    .eq('game_mode', 'Clash Squad')
+    .in('status', ['upcoming', 'locked'])
+    .order('title');
+
+  if (error) {
+    message.textContent = error.message;
+    return;
+  }
+
+  select.innerHTML = '<option value="">Select Clash Squad tournament</option>';
+
+  (data || []).forEach(t => {
+    const option = document.createElement('option');
+    option.value = t.id;
+    option.textContent = t.title;
+    select.appendChild(option);
+  });
+   }
+  document.getElementById('generateMatchesBtn').addEventListener('click', async () => {
+  const tournamentId = document.getElementById('matchTournament').value;
+  const message = document.getElementById('matchGeneratorMessage');
+
+  if (!tournamentId) {
+    message.textContent = 'Please select a tournament first.';
+    return;
+  }
+
+  message.textContent = 'Generating matches...';
+
+  const { data, error } = await db.rpc('generate_clash_squad_matches', {
+    p_tournament_id: tournamentId
+  });
+
+  if (error) {
+    message.textContent = error.message;
+    return;
+  }
+
+  message.textContent = String(data) + ' matches generated successfully.';
+});async function loadRegs(){$('registrationList').innerHTML='<div class="empty">Loading registrations…</div>';let {data,error}=await db.from('registrations').select('id,tournament_id,team_name,captain_name,player_uid,phone,notes,payment_reference,payment_status,registration_status,created_at').order('created_at',{ascending:false});if(error){$('registrationList').innerHTML='<div class="empty bad">'+esc(error.message)+'</div>';return}if(!data?.length){$('registrationList').innerHTML='<div class="empty">No registrations yet.</div>';return}let ids=[...new Set(data.map(r=>r.tournament_id).filter(Boolean))],feeMap={};if(ids.length){let {data:ts}=await db.from('tournaments').select('id,title,entry_fee').in('id',ids);(ts||[]).forEach(t=>feeMap[t.id]=t)}$('registrationList').innerHTML=data.map(r=>{let t=feeMap[r.tournament_id],fee=t?Number(t.entry_fee):null;return `<article class="admin-row"><b>${esc(r.team_name)}</b> <span class="pill">${esc(r.registration_status||'pending')}</span><div class="meta">Tournament: ${esc(t?.title||'Unknown')}<br>Entry fee: ${fee===null?'Unknown':fee===0?'Free':'₹'+fee}<br>Player: ${esc(r.captain_name)}<br>UID: ${esc(r.player_uid)}<br>WhatsApp: ${esc(r.phone)}<br>Notes: ${esc(r.notes||'—')}<br>UTR / reference: ${esc(r.payment_reference||'Not provided')}<br>Payment: ${esc(r.payment_status||'pending')}<br>Submitted: ${esc(dateText(r.created_at))}</div><div class="admin-actions"><button class="green" onclick="updateReg('${r.id}','approved')">Approve</button><button class="red" onclick="updateReg('${r.id}','rejected')">Reject</button><button class="gray" onclick="updatePay('${r.id}','paid')">Mark paid</button><button class="gray" onclick="updatePay('${r.id}','pending')">Payment pending</button></div></article>`}).join('')}
 async function updateReg(id,status){let {error}=await db.from('registrations').update({registration_status:status}).eq('id',id);if(error){adminMsg(error.message,true);return}adminMsg('Registration marked '+status+'.');loadRegs()}async function updatePay(id,status){let {error}=await db.from('registrations').update({payment_status:status}).eq('id',id);if(error){adminMsg(error.message,true);return}adminMsg('Payment status updated to '+status+'.');loadRegs()}
 $('loginForm').addEventListener('submit',async e=>{e.preventDefault();$('loginBtn').disabled=true;let {error}=await db.auth.signInWithPassword({email:$('adminEmail').value.trim(),password:$('adminPassword').value});$('loginBtn').disabled=false;if(error){adminMsg(error.message,true);return}setAdmin(true);loadRegs()});$('logoutBtn').addEventListener('click',async()=>{await db.auth.signOut();setAdmin(false);adminMsg('Logged out.')});$('refreshRegs').addEventListener('click',loadRegs);db.auth.getSession().then(({data})=>{if(data.session){setAdmin(true);loadRegs()}});$('year').textContent=new Date().getFullYear();loadEvents();
 document.getElementById('googleLogin').addEventListener('click', async () => {
